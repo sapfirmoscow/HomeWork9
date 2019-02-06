@@ -51,10 +51,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mMyAdapter);
     }
 
-    private void deleteNote(Note note) {
-        mNoteDB.getNoteDAO().delete(note);
-        downloadNotes();
-    }
+
 
     //метод используется когда мы хотим отредачить записку
     private void openNote(Note note) {
@@ -117,16 +114,24 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void adddNote(Note note) {
-        mNoteDB.getNoteDAO().insert(note);
+        new Thread(() -> mNoteDB.getNoteDAO().insert(note)).start();
     }
 
     private void updateNote(Note note) {
-        mNoteDB.getNoteDAO().update(note);
+
+        new Thread(() -> mNoteDB.getNoteDAO().update(note)).start();
+
     }
 
-
     private void downloadNotes() {
-        mMyAdapter.setNotes(mNoteDB.getNoteDAO().getNotes());
+        new Thread(() -> mMyAdapter.setNotes(mNoteDB.getNoteDAO().getNotes())).start();
+    }
+
+    private void deleteNote(Note note) {
+        new Thread(() -> {
+            mNoteDB.getNoteDAO().delete(note);
+            downloadNotes();
+        }).start();
     }
 
     @Override
