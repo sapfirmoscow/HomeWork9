@@ -7,6 +7,5 @@ import ru.sberbank.homework9.model.Note;
 
 @Database(entities = Note.class, version = 1)
 public abstract class NoteDB extends RoomDatabase {
-
     public abstract NoteDAO getNoteDAO();
 }

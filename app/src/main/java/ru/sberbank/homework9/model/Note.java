@@ -27,14 +27,19 @@ public class Note implements Parcelable {
             return new Note[size];
         }
     };
+
     @ColumnInfo(name = "title")
     private String mTitle;
+
     @ColumnInfo(name = "text")
     private String mText;
+
     @ColumnInfo(name = "created")
     private String mCreationDate;
+
     @ColumnInfo(name = "color")
     private int mColor;
+
     @ColumnInfo(name = "id")
     @PrimaryKey
     private int mId;
