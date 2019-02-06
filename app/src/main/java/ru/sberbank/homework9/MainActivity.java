@@ -1,7 +1,9 @@
 package ru.sberbank.homework9;
 
+import android.annotation.SuppressLint;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import java.util.List;
 
 import ru.sberbank.homework9.db.NoteDB;
 import ru.sberbank.homework9.model.Note;
@@ -114,17 +118,34 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void adddNote(Note note) {
-        new Thread(() -> mNoteDB.getNoteDAO().insert(note)).start();
+        new Thread(() -> {
+            mNoteDB.getNoteDAO().insert(note);
+            downloadNotes();
+        }).start();
     }
 
     private void updateNote(Note note) {
 
-        new Thread(() -> mNoteDB.getNoteDAO().update(note)).start();
-
+        new Thread(() -> {
+            mNoteDB.getNoteDAO().update(note);
+            downloadNotes();
+        }).start();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void downloadNotes() {
-        new Thread(() -> mMyAdapter.setNotes(mNoteDB.getNoteDAO().getNotes())).start();
+        new AsyncTask<Void, Void, List<Note>>() {
+
+            @Override
+            protected List<Note> doInBackground(Void... voids) {
+                return mNoteDB.getNoteDAO().getNotes();
+            }
+
+            @Override
+            protected void onPostExecute(List<Note> notes) {
+                mMyAdapter.setNotes(notes);
+            }
+        }.execute();
     }
 
     private void deleteNote(Note note) {
