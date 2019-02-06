@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">HomeWork9 Data storage</string>
+    <string name="app_name">HomeWork9 Room Persistence Library</string>
     <string name="setting">Setting</string>
 </resources>
